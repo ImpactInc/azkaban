@@ -1,3 +1,39 @@
+---
+---
+### ImpactInc fork
+
+ImpactInc forked this repo from [azkaban/azkaban](https://github.com/azkaban/azkaban)
+tag: [3.90.0](https://github.com/azkaban/azkaban/releases/tag/3.90.0)
+commit-hash: [16b9c63](https://github.com/azkaban/azkaban/commit/16b9c637cb1ba98932da7e1f69b2f93e7882b723)
+date: 2020-06-01
+
+ImpactInc shall use a 3 digit minor suffix to denote versions from this point forward.   
+e.g. `3.90.001, 3.90.002, etc.`
+
+To increment the version, create an annotated tag with the version number.
+```
+git tag -a 3.90.0 -m "Community 3.90.0 release"
+git publish
+```
+
+To deploy a new version of executor and web:
+```
+./gradlew distZip
+```   
+```
+scp azkaban-exec-server/build/distributions/azkaban-exec-server-$version.zip 
+  & azkaban-web-server/build/distributions/azkaban-web-server-$version.zip
+unzip to /opt/azkaban-executor/ 
+       & /opt/azkaban-web/
+symlink /opt/azkaban-executor/current -> azkaban-exec-server-$version
+      & /opt/azkaban-web/current -> azkaban-web-server-$version
+```   
+```
+systemctl restart azkaban-executor
+systemctl restart azkaban-web
+```
+---   
+---
 # Azkaban 
 
 [![Build Status](http://img.shields.io/travis/azkaban/azkaban.svg?style=flat)](https://travis-ci.org/azkaban/azkaban)[![codecov.io](https://codecov.io/github/azkaban/azkaban/branch/master/graph/badge.svg)](https://codecov.io/github/azkaban/azkaban)[![Join the chat at https://gitter.im/azkaban-workflow-engine/Lobby](https://badges.gitter.im/azkaban-workflow-engine/Lobby.svg)](https://gitter.im/azkaban-workflow-engine/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)[![Documentation Status](https://readthedocs.org/projects/azkaban/badge/?version=latest)](http://azkaban.readthedocs.org/en/latest/?badge=latest)
