@@ -3,7 +3,7 @@ apply plugin: "maven-publish"
 publishing {
     repositories {
         maven {
-            url "https://nexus.gcp.inf-impact.net/repository/thirdparty/"
+            url "https://nexus.gcp.inf-impact.net/repository/thirdparty"
             credentials {
                 username findProperty("nexusUsername")
                 password findProperty("nexusPassword")
