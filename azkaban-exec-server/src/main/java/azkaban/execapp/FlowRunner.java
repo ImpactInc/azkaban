@@ -84,6 +84,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -645,6 +646,14 @@ public class FlowRunner extends EventHandler implements Runnable {
       if (node instanceof ExecutableFlowBase) {
         final ExecutableFlowBase flow = ((ExecutableFlowBase) node);
         this.logger.info("Running flow '" + flow.getNestedId() + "'.");
+        if (node instanceof ExecutableFlow) {
+          Map<String, String> flowParams = new TreeMap<>(
+            ((ExecutableFlow) flow).getExecutionOptions().getFlowParameters());
+          this.logger.info("Flow params: ");
+          for (Map.Entry<String, String> e : flowParams.entrySet()) {
+            this.logger.info(" " + e.getKey() + " = " + e.getValue());
+          }
+        }
         flow.setStatus(Status.RUNNING);
         // don't overwrite start time of root flows
         if (flow.getStartTime() <= 0) {
