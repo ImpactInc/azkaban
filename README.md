@@ -15,7 +15,7 @@ To increment the version, create an annotated tag with the version number.
 ```
 git tag -a {VER} -m "Impact fork release {VER}"
 ./gradlew publish
-git push upstream {VER}
+git push origin {VER}
 ```
 
 To deploy a new version of executor and web:
