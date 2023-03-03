@@ -15,19 +15,12 @@
  */
 package azkaban.jobExecutor;
 
-import azkaban.utils.JSONUtils;
 import azkaban.utils.Props;
 import azkaban.utils.PropsUtils;
 import azkaban.utils.Utils;
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Map;
-import org.apache.commons.fileupload.util.Streams;
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 
@@ -222,44 +215,6 @@ public abstract class AbstractProcessJob extends AbstractJob {
 
   /**
    * This public function will be deprecated since it tends to be a Utility function
-   * Please use azkaban.utils.FileIOUtils.loadOutputFileProps(String file) instead.
-   */
-  @Deprecated
-  public Props loadOutputFileProps(final File outputPropertiesFile) {
-    InputStream reader = null;
-    try {
-      this.info("output properties file=" + outputPropertiesFile.getAbsolutePath());
-      reader =
-          new BufferedInputStream(new FileInputStream(outputPropertiesFile));
-
-      final Props outputProps = new Props();
-      final String content = Streams.asString(reader).trim();
-
-      if (!content.isEmpty()) {
-        final Map<String, Object> propMap =
-            (Map<String, Object>) JSONUtils.parseJSONFromString(content);
-
-        for (final Map.Entry<String, Object> entry : propMap.entrySet()) {
-          outputProps.put(entry.getKey(), entry.getValue().toString());
-        }
-      }
-      return outputProps;
-    } catch (final FileNotFoundException e) {
-      this.info(
-          String.format("File[%s] wasn't found, returning empty props.", outputPropertiesFile));
-      return new Props();
-    } catch (final Exception e) {
-      this.error(
-          "Exception thrown when trying to load output file props.  Returning empty Props instead of failing. Is this really the best thing to do?",
-          e);
-      return new Props();
-    } finally {
-      IOUtils.closeQuietly(reader);
-    }
-  }
-
-  /**
-   * This public function will be deprecated since it tends to be a Utility function
    * Please use azkaban.utils.FileIOUtils.createOutputPropsFile(String, String, String) instead.
    */
   @Deprecated
@@ -282,6 +237,6 @@ public abstract class AbstractProcessJob extends AbstractJob {
    * @param outputFile explain
    */
   protected void generateProperties(final File outputFile) {
-    this.generatedProperties = loadOutputFileProps(outputFile);
+    this.generatedProperties = FileIOUtils.loadOutputFileProps(outputFile);
   }
 }
