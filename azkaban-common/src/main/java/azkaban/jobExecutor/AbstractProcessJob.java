@@ -15,6 +15,7 @@
  */
 package azkaban.jobExecutor;
 
+import azkaban.utils.FileIOUtils;
 import azkaban.utils.Props;
 import azkaban.utils.PropsUtils;
 import azkaban.utils.Utils;
