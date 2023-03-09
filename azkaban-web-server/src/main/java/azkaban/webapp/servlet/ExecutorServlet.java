@@ -662,18 +662,12 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
     ret.put("successEmails", flow.getSuccessEmails());
     ret.put("failureEmails", flow.getFailureEmails());
     String flowPropsPath = flow.getId() + "/flow.properties";
-    FlowProps flowPropsFile = flow.getAllFlowProps().get(flowPropsPath);
-    if (flowPropsFile != null) {
+    FlowProps flowPropsSource = flow.getAllFlowProps().get(flowPropsPath);
+    if (flowPropsSource != null) {
       try {
-        if (flowPropsFile.getProps() == null) {
-          Props props = getApplication().getServerProps();
-          File rootDir = new File(props.getString("azkaban.project.dir", "projects"));
-          File projectDir = new File(rootDir, project.getId() + "." + project.getVersion());
-          File installedFlowPropsFile = new File(projectDir, flowPropsPath);
-          Props propsFromFile = new Props(null, installedFlowPropsFile);
-          flowPropsFile.setProps(propsFromFile);
-        }
-        Props flowProps = flowPropsFile.getProps().local();
+        Props flowProps = (flowPropsSource.getProps() == null)
+                ? getPropsFromFile(project, flowPropsPath)
+                : flowPropsSource.getProps().local();
         ret.put("flowParam", new TreeMap<>(flowProps.getFlattened()));
       } catch (Exception e) {
         logger.warn("Unable to load: " + flowPropsPath, e);
@@ -697,6 +691,20 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
     if (sflow != null) {
       ret.put("scheduled", sflow.getNextExecTime());
     }
+  }
+
+  /**
+   * Reads the props file on disk from the project directory.
+   *
+   * @param project
+   * @param propsFilePath
+   */
+  private Props getPropsFromFile(Project project, String propsFilePath) throws IOException {
+    Props props = getApplication().getServerProps();
+    File rootDir = new File(props.getString("azkaban.project.dir", "projects"));
+    File projectDir = new File(rootDir, project.getId() + "." + project.getVersion());
+    File installedFlowPropsFile = new File(projectDir, propsFilePath);
+    return new Props(null, installedFlowPropsFile);
   }
 
   private void ajaxFetchExecutableFlowInfo(final HttpServletRequest req,
