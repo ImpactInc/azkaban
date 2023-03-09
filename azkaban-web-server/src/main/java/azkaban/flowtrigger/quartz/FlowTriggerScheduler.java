@@ -169,7 +169,7 @@ public class FlowTriggerScheduler {
       }
       return flowTriggerJobDetails;
     } catch (final Exception ex) {
-      logger.error("Unable to get scheduled flow triggers", ex);
+      logger.error("Unable to get scheduled flow triggers");
       return new ArrayList<>();
     }
   }
