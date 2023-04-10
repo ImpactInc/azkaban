@@ -52,6 +52,14 @@ allprojects {
     mavenCentral()
     mavenLocal()
   }
+
+  repositories.whenObjectAdded {
+    if (it instanceof IvyArtifactRepository) {
+        metadataSources {
+            artifact()
+        }
+    }
+  }
 }
 
 ext.versions = [hadoop: '2.6.1',
