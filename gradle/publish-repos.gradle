@@ -4,6 +4,7 @@ publishing {
     repositories {
         maven {
             url findProperty("nexusThirdPartyUrl")
+            allowInsecureProtocol = true
             credentials {
                 username findProperty("nexusUsername")
                 password findProperty("nexusPassword")
