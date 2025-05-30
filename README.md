@@ -18,7 +18,7 @@ git tag -a {VER} -m "Impact fork release {VER}"
 git push origin {VER}
 ```
 
-#### Running locally:
+#### Running locally: ![JDK: 8](https://img.shields.io/badge/JDK-8-red.svg)
 - `./gradlew installDist`
 - `cd azkaban-solo-server/build/install/azkaban-solo-server`
 - `bin/start-solo.sh` 
