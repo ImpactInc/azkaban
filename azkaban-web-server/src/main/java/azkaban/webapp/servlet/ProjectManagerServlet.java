@@ -1594,7 +1594,7 @@ public class ProjectManagerServlet extends LoginAbstractAzkabanServlet {
     page.render();
   }
 
-  private static final Pattern SECRETS = Pattern.compile(".*(cred|key|pass|token|user).*", Pattern.CASE_INSENSITIVE);
+  private static final Pattern SECRETS = Pattern.compile(".*(auth|cred|jaas|key|pass|saml|sasl|secur|ssl|token|user).*", Pattern.CASE_INSENSITIVE);
 
   /**
    * Replaces sensitive values with asterisks.
