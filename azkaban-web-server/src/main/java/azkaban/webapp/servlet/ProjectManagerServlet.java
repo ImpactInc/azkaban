@@ -73,6 +73,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -1483,7 +1484,7 @@ public class ProjectManagerServlet extends LoginAbstractAzkabanServlet {
       }
 
       parameters.sort(Comparator.comparing(Pair::getFirst));
-      page.add("parameters", parameters);
+      page.add("parameters", maskSecrets(parameters));
     } catch (final AccessControlException e) {
       page.add("errorMsg", e.getMessage());
     } catch (final ProjectManagerException e) {
@@ -1583,7 +1584,7 @@ public class ProjectManagerServlet extends LoginAbstractAzkabanServlet {
       }
 
       parameters.sort(Comparator.comparing(Pair::getFirst));
-      page.add("parameters", parameters);
+      page.add("parameters", maskSecrets(parameters));
     } catch (final AccessControlException e) {
       page.add("errorMsg", e.getMessage());
     } catch (final ProjectManagerException e) {
@@ -1591,6 +1592,21 @@ public class ProjectManagerServlet extends LoginAbstractAzkabanServlet {
     }
 
     page.render();
+  }
+
+  private static final Pattern SECRETS = Pattern.compile(".*(cred|key|pass|token|user).*", Pattern.CASE_INSENSITIVE);
+
+  /**
+   * Replaces sensitive values with asterisks.
+   */
+  private List<Pair<String, String>> maskSecrets(List<Pair<String, String>> parameters) {
+    List<Pair<String, String>> maskedParameters = new ArrayList<>();
+    for (Pair<String, String> parameter : parameters) {
+      String key = parameter.getFirst();
+      String value = SECRETS.matcher(key).matches() ? "******" : parameter.getSecond();
+      maskedParameters.add(new Pair<>(key, value));
+    }
+    return maskedParameters;
   }
 
   private void handleFlowPage(final HttpServletRequest req, final HttpServletResponse resp,
